@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  uid               String            @id @default(uuid())
+  avatar            String            @default("default.png")
+  uname             String            @unique
+  email             String            @unique
+  ouath_connections Json              @default("{}") // {"google": "google id", ...}
+  balance           Float             @default(1.00)
+  last_spin         DateTime          
+  notifications     UserNotificaion[]
+  auth_token        String?
+  settings          Json?
+  status            Int?
+  games             Game[]
+  bets              Bet[]
+}
+
+model Notification {
+  nid   String            @id @default(uuid())
+  sbj   String
+  txt   String
+  users UserNotificaion[]
+}
+
+model UserNotificaion {
+  uid          String
+  nid          String
+  user         User         @relation(fields: [uid], references: [uid])
+  notification Notification @relation(fields: [nid], references: [nid])
+  read         Boolean      @default(false)
+
+  @@id([nid, uid])
+}
+
+model Game {
+  gid       String @id @default(uuid())
+  users    User[]
+  bets     Bet[]
+  messages Json
+}
+
+model Bet {
+  bid  BigInt @default(autoincrement()) @id
+  uid String
+  gid String
+  amount Float
+  user User @relation(fields: [uid], references: [uid])
+  game Game @relation(fields: [gid], references: [gid])
+}
+

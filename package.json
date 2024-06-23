@@ -1,0 +1,18 @@
+{
+  "name": "@boardgaming-icu/prisma-client",
+  "version": "1.0.0",
+  "description": "Prisma Client for boardgaming.icu",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "tsc && npx prisma generate"
+  },
+  "author": "",
+  "license": "GPL-3.0-or-later",
+  "types": "./index.d.ts",
+  "devDependencies": {
+    "prisma": "^5.15.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.15.1"
+  }
+}
